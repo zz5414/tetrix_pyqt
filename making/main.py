@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QFrame
 
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import QBasicTimer
 
 
 class Tetris(QMainWindow):
@@ -25,11 +26,27 @@ class Tetris(QMainWindow):
 class TetrisBoard(QFrame):
     msg_to_statusbar = pyqtSignal(str)
 
+    Speed = 300
+
     def __init__(self, parent):
         super().__init__(parent)
 
+        # member variable
+        self.timer = QBasicTimer()
+
+
+
     def start(self):
         self.msg_to_statusbar.emit("Hello World")
+        self.timer.start(TetrisBoard.Speed, self)
+
+    def timerEvent(self, event):
+        if event.timerId() == self.timer.timerId():
+            import time
+            self.msg_to_statusbar.emit(str(time.time()))
+        else:
+            super(TetrisBoard, self).timerEvent(event)
+
 
 
 if __name__ == "__main__":
